@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UHV MCQ Quiz – Universal Human Values</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;--surface:#1a1a2e;--card:#16213e;--card2:#1a1a35;
+  --accent:#6c63ff;--accent2:#ff6584;--accent3:#43e97b;
+  --text:#e8e8ff;--text2:#9090b0;--text3:#5a5a7a;
+  --border:#2a2a4a;--success:#43e97b;--error:#ff6584;--warn:#ffd166;
+  --radius:16px;--shadow:0 8px 32px rgba(0,0,0,.4);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ANIMATED BG */
+.bg-orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.15;pointer-events:none;z-index:0;animation:float 8s ease-in-out infinite}
+.bg-orb:nth-child(1){width:500px;height:500px;background:var(--accent);top:-100px;left:-100px;animation-delay:0s}
+.bg-orb:nth-child(2){width:400px;height:400px;background:var(--accent2);bottom:-50px;right:-50px;animation-delay:-3s}
+.bg-orb:nth-child(3){width:300px;height:300px;background:var(--accent3);top:50%;left:50%;animation-delay:-6s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-30px) scale(1.05)}}
+
+/* LAYOUT */
+#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+
+/* SCREENS */
+.screen{width:100%;max-width:860px;animation:fadeIn .4s ease}
+.screen.hidden{display:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* WELCOME SCREEN */
+.welcome-header{text-align:center;margin-bottom:40px}
+.logo-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);border-radius:50px;padding:8px 20px;font-size:13px;font-weight:600;color:var(--accent);margin-bottom:24px;letter-spacing:1px}
+.logo-badge span{font-size:20px}
+.welcome-title{font-size:clamp(32px,6vw,56px);font-weight:900;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 60%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:16px}
+.welcome-sub{font-size:16px;color:var(--text2);max-width:480px;margin:0 auto 40px}
+.stats-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 32px;text-align:center}
+.stat-num{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:12px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* CONFIG */
+.config-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:24px}
+.config-title{font-size:14px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.unit-btn{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;text-align:center;color:var(--text)}
+.unit-btn:hover{border-color:var(--accent);background:rgba(108,99,255,.1)}
+.unit-btn.active{border-color:var(--accent);background:rgba(108,99,255,.15);color:var(--accent)}
+.unit-btn .u-icon{font-size:24px;display:block;margin-bottom:8px}
+.unit-btn .u-name{font-weight:700;font-size:14px}
+.unit-btn .u-count{font-size:12px;color:var(--text2);margin-top:4px}
+
+.count-row{display:flex;gap:12px;flex-wrap:wrap}
+.count-chip{background:var(--surface);border:2px solid var(--border);border-radius:8px;padding:10px 20px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text);transition:all .2s}
+.count-chip:hover{border-color:var(--accent)}
+.count-chip.active{border-color:var(--accent);background:rgba(108,99,255,.15);color:var(--accent)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 32px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;border:none;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;box-shadow:0 4px 20px rgba(108,99,255,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(108,99,255,.5)}
+.btn-secondary{background:var(--card);border:2px solid var(--border);color:var(--text)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:rgba(255,101,132,.15);border:2px solid var(--error);color:var(--error)}
+.btn-success{background:rgba(67,233,123,.15);border:2px solid var(--success);color:var(--success)}
+.btn-full{width:100%;margin-top:8px}
+.btn-lg{padding:18px 40px;font-size:18px;border-radius:16px}
+
+/* QUIZ SCREEN */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+.quiz-meta{display:flex;align-items:center;gap:12px}
+.unit-tag{background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);color:var(--accent);font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:1px}
+.q-counter{font-size:14px;color:var(--text2);font-weight:600}
+.timer-box{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 16px;font-size:20px;font-weight:800;min-width:100px;justify-content:center}
+.timer-box.warn{border-color:var(--warn);color:var(--warn)}
+.timer-box.danger{border-color:var(--error);color:var(--error);animation:pulse 1s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-icon{font-size:16px}
+
+.progress-wrap{margin-bottom:28px}
+.progress-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:600}
+.progress-bar{height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+.question-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:20px;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.q-num{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.q-text{font-size:18px;font-weight:600;line-height:1.6;color:var(--text)}
+
+.options-grid{display:grid;gap:12px;margin-bottom:24px}
+.option{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px 20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.option:hover:not(.disabled){border-color:var(--accent);background:rgba(108,99,255,.06);transform:translateX(4px)}
+.option.selected{border-color:var(--accent);background:rgba(108,99,255,.12)}
+.option.correct{border-color:var(--success);background:rgba(67,233,123,.1);animation:popIn .3s ease}
+.option.wrong{border-color:var(--error);background:rgba(255,101,132,.1)}
+.option.show-correct{border-color:var(--success);background:rgba(67,233,123,.08)}
+.option.disabled{cursor:default}
+@keyframes popIn{0%{transform:scale(.98)}50%{transform:scale(1.01)}100%{transform:scale(1)}}
+.opt-letter{width:36px;height:36px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--text2);flex-shrink:0;transition:all .2s}
+.option.selected .opt-letter{background:var(--accent);color:#fff}
+.option.correct .opt-letter{background:var(--success);color:#fff}
+.option.wrong .opt-letter{background:var(--error);color:#fff}
+.option.show-correct .opt-letter{background:var(--success);color:#fff}
+.opt-text{font-size:15px;font-weight:500;line-height:1.5;flex:1}
+.opt-icon{margin-left:auto;font-size:18px;opacity:0;transition:opacity .2s}
+.option.correct .opt-icon,.option.wrong .opt-icon{opacity:1}
+
+.explanation-box{background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:14px;line-height:1.6;color:var(--text2);animation:fadeIn .3s ease}
+.explanation-box strong{color:var(--accent)}
+
+.quiz-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.quiz-actions-right{display:flex;gap:12px;flex-wrap:wrap}
+.flag-btn{background:none;border:2px solid var(--border);border-radius:10px;padding:10px 16px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:6px}
+.flag-btn:hover,.flag-btn.flagged{border-color:var(--warn);color:var(--warn)}
+.flag-btn.flagged{background:rgba(255,209,102,.1)}
+
+/* RESULT SCREEN */
+.result-header{text-align:center;margin-bottom:40px}
+.result-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:160px;height:160px;border-radius:50%;margin:0 auto 24px;position:relative}
+.result-badge::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--pct)*1%),var(--border) 0);animation:spin .6s ease}
+.result-badge-inner{width:130px;height:130px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.result-pct{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.result-grade{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+.result-title{font-size:28px;font-weight:800;margin-bottom:8px}
+.result-msg{font-size:15px;color:var(--text2)}
+.result-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:32px}
+.rs-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+.rs-val{font-size:28px;font-weight:900}
+.rs-val.green{color:var(--success)}
+.rs-val.red{color:var(--error)}
+.rs-val.blue{color:var(--accent)}
+.rs-val.yellow{color:var(--warn)}
+.rs-key{font-size:12px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+
+.unit-breakdown{margin-bottom:32px}
+.breakdown-title{font-size:14px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.unit-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.unit-row-label{font-size:14px;font-weight:600;min-width:70px}
+.unit-progress{flex:1;height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+.unit-fill{height:100%;border-radius:99px;transition:width .6s .2s}
+.unit-pct-txt{font-size:13px;font-weight:700;min-width:44px;text-align:right}
+.result-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+/* REVIEW SCREEN */
+.review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.review-title{font-size:22px;font-weight:800}
+.review-filters{display:flex;gap:8px;flex-wrap:wrap}
+.rf-btn{background:var(--card);border:2px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);transition:all .2s}
+.rf-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(108,99,255,.1)}
+.rf-btn.green.active{border-color:var(--success);color:var(--success);background:rgba(67,233,123,.08)}
+.rf-btn.red.active{border-color:var(--error);color:var(--error);background:rgba(255,101,132,.08)}
+.review-list{display:flex;flex-direction:column;gap:16px}
+.review-item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:border-color .2s}
+.review-item.ri-correct{border-left:4px solid var(--success)}
+.review-item.ri-wrong{border-left:4px solid var(--error)}
+.review-item.ri-skip{border-left:4px solid var(--text3)}
+.ri-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ri-status{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+.ri-status.correct{background:rgba(67,233,123,.15);color:var(--success)}
+.ri-status.wrong{background:rgba(255,101,132,.15);color:var(--error)}
+.ri-status.skip{background:rgba(90,90,122,.15);color:var(--text3)}
+.ri-unit{font-size:11px;color:var(--text3);font-weight:600}
+.ri-q{font-size:15px;font-weight:600;line-height:1.6;margin-bottom:12px}
+.ri-opts{display:flex;flex-direction:column;gap:6px}
+.ri-opt{font-size:13px;padding:8px 12px;border-radius:8px;display:flex;gap-8px;align-items:center;gap:8px}
+.ri-opt.ri-correct-opt{background:rgba(67,233,123,.1);color:var(--success);font-weight:600}
+.ri-opt.ri-wrong-opt{background:rgba(255,101,132,.1);color:var(--error)}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;width:10px;height:10px;top:-10px;border-radius:2px;animation:confettiDrop 3s ease-in forwards;pointer-events:none;z-index:9999}
+@keyframes confettiDrop{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .quiz-header{flex-direction:column;align-items:flex-start}
+  .q-text{font-size:16px}
+  .opt-text{font-size:14px}
+  .welcome-title{font-size:28px}
+  .result-actions{flex-direction:column}
+  .result-actions .btn{width:100%}
+}
+
+/* MISC */
+.divider{height:1px;background:var(--border);margin:24px 0}
+.text-center{text-align:center}
+.mt-16{margin-top:16px}
+.gap-12{gap:12px}
+.flex{display:flex}
+.flex-wrap{flex-wrap:wrap}
+.items-center{align-items:center}
+.justify-center{justify-content:center}
+</style>
+</head>
+<body>
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+<div class="bg-orb"></div>
+
+<div id="app">
+
+<!-- WELCOME SCREEN -->
+<div class="screen" id="screen-welcome">
+  <div class="welcome-header">
+    <div class="logo-badge"><span>📚</span> Universal Human Values</div>
+    <h1 class="welcome-title">UHV MCQ Quiz</h1>
+    <p class="welcome-sub">Test your knowledge of Universal Human Values. Questions shuffle every time — no two tests are the same!</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">237</div><div class="stat-label">Total Questions</div></div>
+      <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Units</div></div>
+      <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Practice Attempts</div></div>
+    </div>
+  </div>
+
+  <div class="config-card">
+    <div class="config-title">📂 Select Unit</div>
+    <div class="unit-grid">
+      <div class="unit-btn active" onclick="selectUnit('all')" id="unit-all">
+        <span class="u-icon">🌐</span>
+        <div class="u-name">All Units</div>
+        <div class="u-count">237 questions</div>
+      </div>
+      <div class="unit-btn" onclick="selectUnit('I')" id="unit-I">
+        <span class="u-icon">I</span>
+        <div class="u-name">Unit I</div>
+        <div class="u-count">91 questions</div>
+      </div>
+      <div class="unit-btn" onclick="selectUnit('II')" id="unit-II">
+        <span class="u-icon">II</span>
+        <div class="u-name">Unit II</div>
+        <div class="u-count">55 questions</div>
+      </div>
+      <div class="unit-btn" onclick="selectUnit('III')" id="unit-III">
+        <span class="u-icon">III</span>
+        <div class="u-name">Unit III</div>
+        <div class="u-count">91 questions</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-card">
+    <div class="config-title">🔢 Number of Questions</div>
+    <div class="count-row">
+      <div class="count-chip" onclick="selectCount(10)" id="cnt-10">10</div>
+      <div class="count-chip" onclick="selectCount(20)" id="cnt-20">20</div>
+      <div class="count-chip" onclick="selectCount(30)" id="cnt-30">30</div>
+      <div class="count-chip" onclick="selectCount(50)" id="cnt-50">50</div>
+      <div class="count-chip active" onclick="selectCount('all')" id="cnt-all">All</div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-full btn-lg" onclick="startQuiz()">
+    🚀 Start Quiz
+  </button>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen hidden" id="screen-quiz">
+  <div class="quiz-header">
+    <div class="quiz-meta">
+      <div class="unit-tag" id="q-unit-tag">Unit I</div>
+      <div class="q-counter" id="q-counter">Question 1 of 20</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="flag-btn" id="flag-btn" onclick="toggleFlag()">🚩 Flag</button>
+      <div class="timer-box" id="timer-box">⏱ <span id="timer-display">00:00</span></div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-row">
+      <span id="progress-txt">0% complete</span>
+      <span id="progress-count">0/0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-num" id="q-num">Q1</div>
+    <div class="q-text" id="q-text">Question text here</div>
+  </div>
+
+  <div class="options-grid" id="options-grid"></div>
+
+  <div class="explanation-box hidden" id="explanation-box"></div>
+
+  <div class="quiz-actions">
+    <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()">← Prev</button>
+    <div class="quiz-actions-right">
+      <button class="btn btn-secondary" id="skip-btn" onclick="skipQuestion()">Skip</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div class="screen hidden" id="screen-result">
+  <div class="result-header">
+    <div class="result-badge" id="result-badge">
+      <div class="result-badge-inner">
+        <div class="result-pct" id="result-pct">0%</div>
+        <div class="result-grade" id="result-grade">Grade</div>
+      </div>
+    </div>
+    <h2 class="result-title" id="result-title">Quiz Complete!</h2>
+    <p class="result-msg" id="result-msg">Here's how you did</p>
+  </div>
+
+  <div class="result-stats">
+    <div class="rs-card"><div class="rs-val green" id="rs-correct">0</div><div class="rs-key">✅ Correct</div></div>
+    <div class="rs-card"><div class="rs-val red" id="rs-wrong">0</div><div class="rs-key">❌ Wrong</div></div>
+    <div class="rs-card"><div class="rs-val yellow" id="rs-skip">0</div><div class="rs-key">⏭ Skipped</div></div>
+    <div class="rs-card"><div class="rs-val blue" id="rs-time">0:00</div><div class="rs-key">⏱ Time</div></div>
+  </div>
+
+  <div class="unit-breakdown" id="unit-breakdown"></div>
+
+  <div class="result-actions">
+    <button class="btn btn-secondary" onclick="showReview()">📋 Review Answers</button>
+    <button class="btn btn-primary" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+    <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
+  </div>
+</div>
+
+<!-- REVIEW SCREEN -->
+<div class="screen hidden" id="screen-review">
+  <div class="review-header">
+    <div class="review-title">📋 Answer Review</div>
+    <div class="review-filters">
+      <div class="rf-btn active" onclick="filterReview('all')" id="rf-all">All</div>
+      <div class="rf-btn green" onclick="filterReview('correct')" id="rf-correct">✅ Correct</div>
+      <div class="rf-btn red" onclick="filterReview('wrong')" id="rf-wrong">❌ Wrong</div>
+      <div class="rf-btn" onclick="filterReview('skip')" id="rf-skip">⏭ Skipped</div>
+    </div>
+  </div>
+  <div class="review-list" id="review-list"></div>
+  <div class="divider"></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-primary" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+    <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ===================== QUESTION DATA =====================
+const ALL_QUESTIONS = [
+// ===== UNIT I (91) =====
+{u:"Unit I",q:"What is invariant and universal among all human beings",o:["Natural Acceptance","Understanding","Expectations","None of these"],a:0},
+{u:"Unit I",q:"Value education helps to",o:["Remove our confusions","Bring harmony in all levels of human living","Removes our contradictions","All of these"],a:3},
+{u:"Unit I",q:"Holistic development of human beings",o:["Living only with Physical facility","Living with Relationships","Living for all the three – right understanding, relationship and physical facility (Human Consciousness)","None of these"],a:2},
+{u:"Unit I",q:"Experiential validation of proposal means",o:["Living according to our desires","Living according to proposal after verifying it by natural acceptance","Living according to our expectations","Living according to our thoughts"],a:1},
+{u:"Unit I",q:"Ensuring justice in relationship on the basis of values leads to _____ in the society",o:["Trust","Fearlessness","Respect","None of these"],a:1},
+{u:"Unit I",q:"Which of the following is more pronounced in animal consciousness?",o:["Right understanding","Physical facility","Relationship","None of these"],a:1},
+{u:"Unit I",q:"Identify the correct order",o:["Physical facility, right understanding, relationship","Physical facility, relationship, right understanding","Relationship, right understanding, physical facility","Right understanding, relationship, physical facility"],a:3},
+{u:"Unit I",q:"Self-explorations means",o:["Dialogue between what you are and what you want to be","It is the process of self-evaluation through self-investigation","It is the process of knowing the human conduct","All of these"],a:3},
+{u:"Unit I",q:"Which of the following fact is not true about profession, if ethics is followed?",o:["Able to earn a livelihood of the family","Evaluated by the wealth it generates","Requires certain skills","Profession is also a service"],a:1},
+{u:"Unit I",q:"Need for value education",o:["Correct identification of our aspirations","To fulfill our aspirations in continuity","Evaluation of our beliefs","All of these"],a:3},
+{u:"Unit I",q:"Universal human aspirations means",o:["Happiness and Prosperity","Continuity of Happiness and Prosperity","Happiness","Prosperity"],a:1},
+{u:"Unit I",q:"What is happiness?",o:["A harmony state in which you want to be","A state getting through sensations","A state of preconditioning","All of these"],a:0},
+{u:"Unit I",q:"The basic guideline for value education",o:["Cannot be defined for the present system","Cannot be universal","Universal, Natural, Rational and Verifiable","None of these"],a:2},
+{u:"Unit I",q:"Which one is NOT part of basic guidelines for Value Education?",o:["Universal","Rational","Leading to disharmony","Verifiable"],a:2},
+{u:"Unit I",q:"Which of the following is the attitude of ethical human conduct?",o:["Values","Wealth","Storage","None of these"],a:0},
+{u:"Unit I",q:"Imagination includes",o:["Desires and Thoughts","Thoughts and Expectations","Desire and Expectations","Desires, Thoughts and Expectations (DTE)"],a:3},
+{u:"Unit I",q:"Which of the options is one of the dimensions of human endeavour?",o:["Education","Corruption","Competition","None of these"],a:0},
+{u:"Unit I",q:"The basic desire of the human being is always",o:["Happy","Prosperous","Happy and Prosperous","None of these"],a:2},
+{u:"Unit I",q:"Human life is lived at four levels: Individual, Family, _____, and Nature",o:["Community","Imaging","Society","Analyzing"],a:2},
+{u:"Unit I",q:"The definitiveness of human conduct in terms of values, policies and character is termed as",o:["Responsibilities","Values","Profession","None of these"],a:1},
+{u:"Unit I",q:"Developing the ethical competence in the profession is the only effective way to ensure",o:["Responsibilities","Ethics","Professionalism","Success"],a:1},
+{u:"Unit I",q:"_____ are considered the moral standards by which people judge the behaviour",o:["Responsibilities","Ethics","Professionalism","Success"],a:1},
+{u:"Unit I",q:"_____ is the implications of right understanding in profession",o:["Responsibilities","Ethics","Professionalism","Success"],a:1},
+{u:"Unit I",q:"Holistic production systems are",o:["Eco-friendly","People friendly","Both Eco-friendly and People friendly","None of these"],a:2},
+{u:"Unit I",q:"Lot of physical facilities can provide us",o:["Happiness","Prosperity","Both Prosperity and Happiness","None of these"],a:3},
+{u:"Unit I",q:"The basic capacity of analyzing is known as",o:["Desire","Expectation","Thought","Behaviour"],a:2},
+{u:"Unit I",q:"The process of education and right living leads to",o:["Labour","Right understanding","Existence","Co-existence"],a:3},
+{u:"Unit I",q:"The definiteness of behaviour and work of human being is termed as",o:["Human Behaviour","Human Character","Human Constitution","Human Efforts"],a:1},
+{u:"Unit I",q:"Understanding of human values leads to the practice of",o:["Responsibility","Professional Behaviour","Ethics","None of these"],a:2},
+{u:"Unit I",q:"The second dimension of human being is",o:["Thought","Work","Behaviour","Realization"],a:3},
+{u:"Unit I",q:"When we set our goals in right direction with the help of right understanding, it is called as",o:["Skill Domain","Development","Value Domain","Prosperity"],a:2},
+{u:"Unit I",q:"Our participation in different levels in the larger order is known as",o:["Behaviour","Efforts","Values","None of these"],a:2},
+{u:"Unit I",q:"Attention and Appreciation from others",o:["Can't be continuous","Can't ensure continuous happiness","Create dependency on others","All of these"],a:3},
+{u:"Unit I",q:"The programme for health and samyam leads to feeling of _____ in family",o:["Prosperity","Happiness","Both the Happiness and Prosperity","None of these"],a:2},
+{u:"Unit I",q:"Production and work for physical facilities leads to _____ in family and _____ with nature",o:["Prosperity, Existence","Happiness, Existence","Prosperity, Co-existence","Happiness, Co-existence"],a:2},
+{u:"Unit I",q:"Which of the following is true about Value Domain and Skill Domain?",o:["Value domain is part of the skill domain","Value domain is in conflict with skill domain","The value domain deals with understanding, while the skill domain deals with learning","The value domain deals with learning, while the skill domain deals with understanding"],a:2},
+{u:"Unit I",q:"Value Education leads human being to",o:["Conflicts","Confusion","Harmony","All of these"],a:2},
+{u:"Unit I",q:"It is the second level of living",o:["Individual","Society","Nature","Family"],a:3},
+{u:"Unit I",q:"One of the undesirable common habits is that we have a tendency to suspect others",o:["Intention","Competence","Both intention and competence","None of these"],a:2},
+{u:"Unit I",q:"Which of the following is not a dimension of human being?",o:["Society","Thought","Behaviour","Realization"],a:0},
+{u:"Unit I",q:"In self-exploration we will not verify on the basis of",o:["Others perception","Scriptures","Reading from instruments","All of these"],a:3},
+{u:"Unit I",q:"It is the fourth level of living",o:["Society","Nature","Individual","Family"],a:1},
+{u:"Unit I",q:"The result of self-exploration is",o:["Realization","Right understanding","Both Realization and Right understanding","None of these"],a:2},
+{u:"Unit I",q:"The process of verification of any proposal can be useful when verified",o:["At One's own right","On the basis of reading from instruments","On the basis of readings from books","On the basis of others' perception"],a:0},
+{u:"Unit I",q:"Self-exploration is the dialogue between 'what you are' and",o:["'what you want to be'","'what others want you to be'","'what society wants you to be'","All of these"],a:0},
+{u:"Unit I",q:"Continuous happiness and prosperity are the",o:["Impractical thought","Impossible desires","Basic human aspirations","None of these"],a:2},
+{u:"Unit I",q:"To be wealthy is _____ condition in the modern world to be happy",o:["The most important","The true","Not essential","Fake"],a:3},
+{u:"Unit I",q:"Being happy _____ good-luck and lot of external circumstances",o:["Means","Depends on","Does not depend on","None of these"],a:2},
+{u:"Unit I",q:"Which one of the following is true?",o:["A human being needs both relationship and physical facilities. One cannot replace the other.","If abundant physical facilities, prosperity is ensured","If abundant physical facilities, happiness is ensured","If happy in continuity, does not need physical facilities"],a:1},
+{u:"Unit I",q:"Living with Physical Comforts only means",o:["Animal Consciousness","God Consciousness","Human Consciousness","Real Consciousness"],a:0},
+{u:"Unit I",q:"The feeling of producing/having more than required physical facility is",o:["Prosperity","Happiness","Success","Satisfaction"],a:0},
+{u:"Unit I",q:"To verify the proposal or assumption through self exploration leads to",o:["Assuming","Knowing","Realizing","Preconditioning"],a:1},
+{u:"Unit I",q:"Which are the four levels of living?",o:["Individual, family, society, nature","Thought, behaviour, work, realization","Material, pranic, animal, human","None of these"],a:0},
+{u:"Unit I",q:"If something is _____ to us, without any force or compulsion, then it is often correct",o:["Not acceptable","Less acceptable","Completely acceptable","Naturally acceptable"],a:3},
+{u:"Unit I",q:"The value of any unit in this existence is in its _____ in the larger order",o:["Participation","Existence","Performance","Appearance"],a:0},
+{u:"Unit I",q:"The four dimensions of human being are thought, _____, work and realization",o:["Action","Speaking","Behaviour","Performance"],a:2},
+{u:"Unit I",q:"On continued basis we should examine our",o:["Thought system","Performance system","Belief system","None of these"],a:2},
+{u:"Unit I",q:"Two basic things in self-exploration: basic desires and how to _____ them",o:["Perform these","Remove these","Fulfill these","None of these"],a:2},
+{u:"Unit I",q:"Expression of thought is in the form of",o:["Behaviour","Work","Realization","Behaviour and Work"],a:3},
+{u:"Unit I",q:"Universal, rational, and verifiable are the _____ of value education",o:["Needs","Outcomes","Basic guidelines","None of these"],a:1},
+{u:"Unit I",q:"The value of entity is decided on the basis of",o:["Participation in the larger order","MRP","Cost","Physical properties"],a:0},
+{u:"Unit I",q:"Value education helps us to correctly identify our",o:["Goals","Aspirations","Desires","All of these"],a:3},
+{u:"Unit I",q:"The purpose of the value education is to",o:["Foster universal values","Make the syllabus easy","Develop values in individuals","Both foster universal values and develop values in individuals"],a:3},
+{u:"Unit I",q:"A harmonious world is created by values at 4 levels. These are",o:["Home, Family, Society, Nation","Individual, Family, Society, Existence","School, Home, Office, Temple","None of these"],a:1},
+{u:"Unit I",q:"The content of self-exploration is to understand the desire and _____ of human being",o:["Potential","Programme","Purpose","None of these"],a:1},
+{u:"Unit I",q:"Human-Rest of the nature interaction is called as",o:["Behaviour","Production","Work","Realization"],a:2},
+{u:"Unit I",q:"Clarity and Identification of comprehensive human goals in the light of right understanding is called",o:["Science","Work","Wisdom","Behaviour"],a:2},
+{u:"Unit I",q:"Comprehensive human goals are fulfilled with the help of",o:["Wisdom","Science","Precondition and sensation","All of these"],a:1},
+{u:"Unit I",q:"To ensure justice from family to world family is called",o:["Production","Science","Wisdom","Undivided human society"],a:3},
+{u:"Unit I",q:"Ensuring mutual fulfilment and mutual prosperity from family to world family is",o:["Science","Wisdom","Undivided human society","Universal human order"],a:3},
+{u:"Unit I",q:"Which among the following is not a comprehensive human goal?",o:["Right understanding in every individual","Mastery and complete control over nature","Fearlessness in society","Harmony in nature"],a:1},
+{u:"Unit I",q:"Ensuring the concept of undivided society and universal human order from generation to generation is called",o:["Wisdom","Undivided human society","Universal human order","Human Tradition"],a:3},
+{u:"Unit I",q:"Transformation through Human Education includes",o:["Personal Transformation","Societal Transformation","Both Personal as well as societal transformation","Materialistic transformation"],a:2},
+{u:"Unit I",q:"In society, obsession for consumption, profit and sensory pleasure is more due to",o:["Knowledge","Assumption","Recognition","Fulfilment"],a:1},
+{u:"Unit I",q:"Sound, Touch, Taste, Smell, and Form are",o:["Traps","Innate faculty","Sensations","Preconditioning"],a:2},
+{u:"Unit I",q:"Definite completion point of feelings is",o:["Outside","Within","Nowhere","Others"],a:1},
+{u:"Unit I",q:"An individual aspiring for the universal human order will be",o:["More responsible socially and ecologically","More rich","More powerful","None of these"],a:0},
+{u:"Unit I",q:'"All are our own, all are interconnected and inter dependent" means',o:["Oneness","Worship","Ease","None of these"],a:0},
+{u:"Unit I",q:"_____ and _____ are the basis of undivided society",o:["Love and Oneness","Care and guidance","Affection and Respect","None of these"],a:0},
+{u:"Unit I",q:"In Teacher – Student relationship, the teacher should have the feeling of _____ for the students",o:["Love","Guidance","Care","Gratitude"],a:1},
+{u:"Unit I",q:"In Teacher – Student relationship, the students should have the feeling of _____ for the Teachers",o:["Love","Guidance","Care","Gratitude"],a:3},
+{u:"Unit I",q:"For relationship among siblings, there is a need for the feelings of",o:["Love and Trust","Care and affection","Respect","All of these"],a:3},
+{u:"Unit I",q:"What are the feelings that remain as base of all relationships?",o:["Reverence, Glory, Gratitude","Trust, Respect, Affection","Care, Guidance, Affection","Trust, Reverence, Glory"],a:1},
+{u:"Unit I",q:"Moral value is combination of",o:["Right Speech, Right Action","Right Vision, Right Resolve","Right Livelihood, Right Effort","Right Awareness, Right Concentration"],a:0},
+{u:"Unit I",q:"Meditation includes",o:["Right Speech, Right Action","Right Vision, Right Resolve","Right Livelihood, Right Effort","Right Awareness, Right Concentration"],a:3},
+{u:"Unit I",q:"Belief centric wisdom is",o:["Knowledge based on listening","Knowledge based on self realization of existential reality","Reasoning based knowledge","None of these"],a:0},
+{u:"Unit I",q:"Logic centric wisdom is",o:["Knowledge based on listening","Knowledge based on self realization of existential reality","Reasoning based knowledge","None of these"],a:2},
+{u:"Unit I",q:"Realization centric wisdom is",o:["Knowledge based on listening","Knowledge based on self realization of existential reality","Reasoning based knowledge","None of these"],a:1},
+{u:"Unit I",q:"Non-violence means not hurting anyone by",o:["Body","Mind","Speech and words","All of these"],a:3},
+{u:"Unit I",q:"Liberation means",o:["To see the existence clearly","To see the reality as it is","To be rid of all types of misunderstanding, confusions","All of these"],a:3},
+{u:"Unit I",q:"It is natural for _____ to slowly deteriorate",o:["Physical things/Physical facilities","Happiness","Feelings","Relationship"],a:0},
+
+// ===== UNIT II (55) =====
+{u:"Unit II",q:"Employing the body physically for production and maintenance of physical facilities is called as",o:["Asan","Pranayam","Labour","None of these"],a:2},
+{u:"Unit II",q:"Trust, Respect, Happiness, etc., are the needs of",o:["The Body","The Self (I)","The Self and the Body","None of these"],a:1},
+{u:"Unit II",q:"The activities of the body (in response) are",o:["Assuming and Knowing","Assuming and Fulfilling","Recognising and Fulfilling","Knowing and Fulfilling"],a:2},
+{u:"Unit II",q:"'Seer' means the one that",o:["Does something","understands","Experience","All of these"],a:1},
+{u:"Unit II",q:"Who is responsible for happiness and unhappiness?",o:["Body","Self","Outside situations","Society"],a:1},
+{u:"Unit II",q:"Human body is an instrument to facilitate",o:["Sensations","Preconditioning","Right Understanding","Assumptions"],a:2},
+{u:"Unit II",q:"When we assume something on the basis of prevailing notion, then it is called as",o:["Preconditioning","Sensation","Right Understanding","Natural Acceptance"],a:0},
+{u:"Unit II",q:"Behaviour on the basis of right understanding and realization is called",o:["Confused behaviour","Wrong behaviour","Self organized behaviour","All of these"],a:2},
+{u:"Unit II",q:"The activity of selecting/tasting is",o:["Continuous","Variable","Uncertain","None of these"],a:0},
+{u:"Unit II",q:"The power/force for the activity of analyzing is",o:["Desire","Expectations","Realization","Thoughts"],a:3},
+{u:"Unit II",q:"When there is harmony among the parts of the body, then it is called a status of",o:["Sanyam","Swasthya","Both Sanyam and Swasthya","None of these"],a:1},
+{u:"Unit II",q:"Harmony should be maintained between",o:["Body and Life","Self and Society","Society and Environment","All of these"],a:3},
+{u:"Unit II",q:"The statement 'all parts of the body performing their expected functions' is related with",o:["Proper upkeep","Self regulation","Sanyam","Swasthya"],a:3},
+{u:"Unit II",q:"_____ is the central to the human existence",o:["Body","Self","Physical facilities","None of these"],a:1},
+{u:"Unit II",q:"Realization is the activity of",o:["Self","Body","Both Self and Body","None of these"],a:0},
+{u:"Unit II",q:"'Seeing the Self by the Self' means",o:["The conscious observation of the consciousness","The conscious observation of the material","The conscious observation of the co-existence","None of these"],a:0},
+{u:"Unit II",q:"Activities of the body are",o:["Temporary in Time","Continuous in Time","Discrete in nature","None of these"],a:0},
+{u:"Unit II",q:"_____ is central to existence",o:["Body","Physical facility","Co-existence","Self"],a:2},
+{u:"Unit II",q:"Which of the following does not lead right understanding in the Self (I)",o:["A process of do's don'ts in which we assume what is being said without verification","A process of self-verification on your own right","Verification of the proposals on the basis of natural acceptance","Verification through experiential validation"],a:0},
+{u:"Unit II",q:"Which one of the following is correct?",o:["Self = Body","Self and Body are in co-existence","Needs of the Self and Body are same","All are correct"],a:1},
+{u:"Unit II",q:"Need of the Self is",o:["Temporary","Quantitative","Qualitative","None of these"],a:2},
+{u:"Unit II",q:"The 'I' is",o:["The doer","The enjoyer","The Seer","All of these"],a:3},
+{u:"Unit II",q:"The responses of the Self are",o:["Knowing and Fulfilling","Knowing, Assuming, Recognising, and Fulfilling","Knowing and Recognising","Knowing, Recognising and Fulfilling"],a:1},
+{u:"Unit II",q:"The needs of the Self are fulfilled by",o:["Right Understanding and Right Feeling","Right Feeling","Right Understanding","Cannot be decided"],a:0},
+{u:"Unit II",q:"Which is material unit?",o:["Body","Physical facility","Physiochemical things","All of these"],a:3},
+{u:"Unit II",q:"Which among the following is not an activity of the body",o:["Assuming","Recognizing","Fulfilling","All of these"],a:0},
+{u:"Unit II",q:"Self organization means",o:["Innateness","Co-existence","Natural characteristics","Form"],a:0},
+{u:"Unit II",q:"The Body is a _____ unit; while the Self is a _____ unit",o:["Consciousness and Qualitative","Material, Consciousness","Consciousness, Material","Quantitative, Material"],a:1},
+{u:"Unit II",q:"Which among the following is a variable unit?",o:["Form","Co-existence","Innateness","All of these"],a:0},
+{u:"Unit II",q:"_____ is done with the help of proper food, water and air",o:["Protection of the body","Right utilization of the body","Nourishment of the body","Exploitation of the body"],a:2},
+{u:"Unit II",q:"What is not the indicator of good health of the Self and Body",o:["Feeling of self-regulation of the body","Feeling of happiness and prosperity","Feeling of jealousy, anger and competition for others","None of these"],a:2},
+{u:"Unit II",q:"When we try to achieve happiness and prosperity by maximizing accumulation and consumption of physical facilities, we become",o:["Anti-social","Anti-ecological","Threat to human survival","All of these"],a:3},
+{u:"Unit II",q:"On having realization and understanding, we get",o:["Assurance","Satisfaction","Universality","All of these"],a:3},
+{u:"Unit II",q:"Physical facilities are required in _____ quantity",o:["Uncertain","Limited","Unlimited","Insignificant"],a:1},
+{u:"Unit II",q:"Doer means the one who",o:["Understands","Does something","Experience","All of these"],a:1},
+{u:"Unit II",q:"The basic unit of learning human interaction is",o:["Society","School","Family","Nature"],a:2},
+{u:"Unit II",q:"In Value Education 'Sanyam' means",o:["Self exploration","Self evaluation","Self regulation","None of these"],a:2},
+{u:"Unit II",q:"'Sanyam' is feeling of responsibility for _____ of the body",o:["Nurturing and protection","Protection and right utilization","Nurturing and right utilization","Nurturing, Protection and Right Utilization"],a:3},
+{u:"Unit II",q:"The pleasure obtained from sensations is",o:["Temporary and source of long lasting happiness","Continuous and source of long lasting happiness","Short lived and continuous","Short lived and temporary"],a:3},
+{u:"Unit II",q:"We should make choices with external world based on our",o:["Natural acceptance","Preconditioning","Sensations","All of these"],a:0},
+{u:"Unit II",q:"The Self reads the _____ and gives the _____ to the body",o:["Instructions, Information","Instructions, Sensation","Sensation, Instruction","Sensation, Information"],a:2},
+{u:"Unit II",q:"What leads to Resolution?",o:["Assuming","Knowing","Recognising","Fulfilling"],a:1},
+{u:"Unit II",q:"Which of the following is temporary in existence?",o:["Space","Consciousness","Material unit","Co-existence"],a:2},
+{u:"Unit II",q:"Which of the following is 'ever' in existence?",o:["Space","Consciousness","Material unit","None of these"],a:0},
+{u:"Unit II",q:"Which of the following is continuous in existence",o:["Space","Consciousness","Material unit","None of these"],a:1},
+{u:"Unit II",q:"Which among the following is not a characteristic of 'consciousness'?",o:["Cyclic development","Temporary","Continuous","Recognising"],a:1},
+{u:"Unit II",q:"_____ wants to live with continuous happiness",o:["Body","Self","Plant and animals","Material unit"],a:1},
+{u:"Unit II",q:"_____ is just used as an instrument of _____",o:["Body, Self","Self, Body","Physical facility, Self","Imagination, Preconditioning"],a:0},
+{u:"Unit II",q:"Find the wrong statement from the following",o:["Self is seer/viewer","Self is doer (decision maker)","Self is enjoyer (the one who experiences)","Self is an instrument of the body"],a:3},
+{u:"Unit II",q:"Find the wrong statement",o:["'seer' means one that sees/understands","All the 5 senses are instruments enable the Self to see from outside","All in the process of seeing, the Self is used as an instrument","You can also see within, without using the sensations in the body."],a:2},
+{u:"Unit II",q:"Which of the following is a wrong statement?",o:["Self is the one who decides – what to do and what not to do","The body is used to express the decision of the Self, if required","Self may or may not use the body to execute its decisions","What I think is the decision of my body."],a:3},
+{u:"Unit II",q:"Which of the following is not a correct statement about the Body and Self?",o:["It is my Self that experiences happiness and unhappiness","It is my body that enjoys the taste of food","It is my Self that feels enthused and depressed","It is my Self that feels angry and delighted"],a:1},
+{u:"Unit II",q:"Which among the following statement is correct about the physical facility?",o:["Physical facilities are required to fulfill the responsibility of the Self toward body","Physical facilities are required to keep the body in good health","The required physical facilities could be recognised along with the required quantity","All of these"],a:3},
+{u:"Unit II",q:"What does right utilization of body mean?",o:["Use the body as an instrument of communication (behaviour)","Use the body as an instrument of labour/work","As an instrument for the continuity of human tradition","All of these"],a:3},
+{u:"Unit II",q:"Right utilization ensured of",o:["Physical facilities","Body","Self","All of these"],a:3},
+
+// ===== UNIT III (91) =====
+{u:"Unit III",q:"Transformation of the _____ in nature is more cyclical",o:["Material things","Plants","Animals","All of these"],a:0},
+{u:"Unit III",q:"Composition and de-composition is the only activity of which order?",o:["Animal","Plant (Pranic/Bio)","Human","Physical"],a:3},
+{u:"Unit III",q:"In existence 'units' are",o:["Unlimited in size and also active","Unlimited in size, but inactive","Limited in size and also active","Limited in size and also inactive"],a:2},
+{u:"Unit III",q:"Space is/are",o:["Unlimited","All pervading","No activity","All of these"],a:3},
+{u:"Unit III",q:"Which order is most fulfilling by the other?",o:["Human","Physical","Animal","Plant (Bio/Pranic)"],a:1},
+{u:"Unit III",q:"Natural acceptance",o:["Does not change with time","Does not depend on the place","Does not depend on our past conditioning and our beliefs","All of these"],a:3},
+{u:"Unit III",q:"Animal order is _____ based inheritance",o:["Constitution","Seed","Education – Sanskar","Breed"],a:3},
+{u:"Unit III",q:"Order of appearance of four orders",o:["Plant, Physical, Animal, Human","Human, Animal, Plant, Physical","Human, Physical, Plant, Animal","Physical, Plant, Animal, Human"],a:3},
+{u:"Unit III",q:"Right understanding and relationship leads to",o:["Individual Happiness","Mutual prosperity","Both","None of these"],a:1},
+{u:"Unit III",q:"_____ is the human value which is all encompassing",o:["Trust","Affection","Love","Respect"],a:2},
+{u:"Unit III",q:"Respect means",o:["Right Evaluation","Right Utilization","Right judgement","All of these"],a:0},
+{u:"Unit III",q:"One of the following is a complete value by itself",o:["Trust","Honesty","Love","Gratitude"],a:2},
+{u:"Unit III",q:"Trust implies",o:["To have the clarity that the other wants to make me happy and prosperous","To be assured of the intention founded on understanding","To see that all human beings have the same natural acceptance as me","All of these"],a:3},
+{u:"Unit III",q:"Trust = to have the clarity that the other wants to make me _____",o:["Happy","Prosperous","Happy and Prosperous","None of these"],a:2},
+{u:"Unit III",q:"Each 'unit' is",o:["Self-organized in space","Energised and active in space","Recognising and fulfilling its relationship with other units in space","All of these"],a:3},
+{u:"Unit III",q:"There is _____ among all units in space",o:["Existence","Co-existence","Harmony","None of these"],a:1},
+{u:"Unit III",q:"There is a relationship of _____ in nature",o:["Mutual Happiness","Mutual Prosperity","Mutual Understanding","Mutual Fulfilment"],a:3},
+{u:"Unit III",q:"To establish Universal Human Order, the starting point has to be",o:["Individual","Family","Society","Nature"],a:0},
+{u:"Unit III",q:"Which of the following is not involved in the holistic criteria for evaluation of technology?",o:["Catering to appropriate need","To generate huge profit","To make technology eco-friendly","To make technology user-friendly"],a:1},
+{u:"Unit III",q:"Which of the following is the entry point in the implementation of humanistic tradition?",o:["Universal Human Order","Humanistic Education","Humanistic Constitution","None of these"],a:1},
+{u:"Unit III",q:"Read the two statements: a) Right understanding in every individual is part of the comprehensive human goal. b) Prosperity in every family is part of the comprehensive human goal.",o:["Statement (a) is true; statement (b) is false","Both the statements are true","Statement (a) is false; statement (b) is true","Both the statements are false"],a:1},
+{u:"Unit III",q:"Feeling for those who have made efforts for my excellence is",o:["Glory","Gratitude","Worship","None of these"],a:1},
+{u:"Unit III",q:"_____ is feeling of responsibility and commitment for ensuring right understanding and right feeling in the self of my relative",o:["Guidance","Respect","Care","Affection"],a:0},
+{u:"Unit III",q:"_____ called foundation of value",o:["Love","Respect","Trust","Affection"],a:2},
+{u:"Unit III",q:"I naturally feel related to others, when I have the feelings of _____ in myself for others",o:["Trust and Respect","Pride and Ego","Reverence and Glory","Love and Affection"],a:0},
+{u:"Unit III",q:"Harmonious human-human relationship resulting in mutual happiness is the achievement of",o:["Love","Respect","Trust","Justice"],a:3},
+{u:"Unit III",q:"If I say, 'I am good for nothing', it is a kind of",o:["Right evaluation","Under evaluation","Over evaluation","None of these"],a:1},
+{u:"Unit III",q:"Everything that we see in the nature and existence is the natural expression and unfolding of this",o:["Body","Physical facility","Self","Co-existence"],a:3},
+{u:"Unit III",q:"_____ is central in relationship",o:["Feelings","Trust","Respect","Affection"],a:0},
+{u:"Unit III",q:"The need of human being, i.e., of continuous happiness and prosperity can be fulfilled by 1. Having a lot of physical facilities 2. Sensation based living 3. Understanding co-existence 4. Having feeling and thought of co-existence",o:["1 and 2","2 and 4","3 and 4","1 and 4"],a:2},
+{u:"Unit III",q:"How are the feeling and thought of co-existence expressed naturally?",o:["In the form of mutually fulfilling behaviour with human being","In the form of mutually enriching work with rest of the nature","In the form of participation in the larger order leading to undivided society and universal human order","All of these"],a:3},
+{u:"Unit III",q:"Which among the following is not a 'guideline' for human values/value education subject?",o:["Universal","A process of self-investigation and self-exploration","Systematic and rational study of human beings vis-a-vis the rest of the existence","Giving sermons and a set of do's and don'ts related to human values"],a:3},
+{u:"Unit III",q:"Which one of the following is not a comprehensive human goal?",o:["Right understanding in every individual","Mastery over nature","Feeling of prosperity in every family","Fearlessness in society"],a:1},
+{u:"Unit III",q:"The statement 'all units in nature can be classified into 4 orders with definite innateness' deals with",o:["Understanding","Realization of co-existence","Contemplation","None of these"],a:0},
+{u:"Unit III",q:"The statement 'every unit has a definite participation in existence and a definite role to play' deals with",o:["Contemplation","Understanding","Realization of co-existence","None of these"],a:0},
+{u:"Unit III",q:"The basic unit of learning human interaction is",o:["Society","School","Family","Nature"],a:2},
+{u:"Unit III",q:"On what basis we can decide our feelings and thoughts?",o:["Right understanding/Natural acceptance","Assumptions (preconditioning)","Both","None of these"],a:2},
+{u:"Unit III",q:"Which among the following feelings is not naturally acceptable to me?",o:["The feeling of relationships","The feeling of harmony","The feeling of struggle","The feeling of co-existence"],a:2},
+{u:"Unit III",q:"To which category a prosperous person belong?",o:["SVDD","SSDD","SSSS","None of the above"],a:2},
+{u:"Unit III",q:"Authentication is the dynamic activity of",o:["Realization","Contemplation","Understanding","Comparing"],a:0},
+{u:"Unit III",q:"All the instructions from the Self to the Body are from the activity of",o:["Selection","Contemplation","Realization","None of these"],a:0},
+{u:"Unit III",q:"What is the dynamic activity of 'understanding'?",o:["Authentication","Determination","Imaging","Analyzing"],a:1},
+{u:"Unit III",q:"Unanimity means",o:["Able to work together","To live with feeling of co-existence, relationship with every unit of co-existence","Absence of ego","Self motivated for fulfilling of the responsibility"],a:1},
+{u:"Unit III",q:"Utility value of a unit means, it helps in",o:["Nurturing and protecting the body","In enhancing the capacity of the body for use in societal development","Both","None of these"],a:2},
+{u:"Unit III",q:"Artistic value of a unit means, it helps in",o:["Protecting the physical facility","People friendly – Facilitating behaviour","Ease in Use – Facilitating work","All of these"],a:3},
+{u:"Unit III",q:"There are _____ elements of justice",o:["Four","Eight","Three","Five"],a:0},
+{u:"Unit III",q:"Undivided human society is the outcome of",o:["Living with justice","Dominating human being","Living in harmony in nature","Developing more and more in science and technology"],a:0},
+{u:"Unit III",q:"Human Development essentially means",o:["Transformation from animal consciousness to human consciousness","Being the best","Making the nation a super power","Earning more physical facilities/wealth"],a:0},
+{u:"Unit III",q:"Animal consciousness is",o:["Giving priority to physical facilities, maximization of sensory pleasures and accumulation of wealth","Giving priority to relationship, right understanding and inherent feeling of happiness","Both","None of these"],a:0},
+{u:"Unit III",q:"Human consciousness is",o:["Giving priority to physical facilities, maximization of sensory pleasures and accumulation of wealth","Giving priority to relationship, right understanding and inherent feeling of happiness","Emerging more competitive and dominant on others","None of these"],a:1},
+{u:"Unit III",q:"Behaviour and work are the outcome of",o:["Desires","Thoughts","Expectations","All of these"],a:3},
+{u:"Unit III",q:"Disrespect leads to",o:["Ego","Depression","Acrimony","All of these"],a:3},
+{u:"Unit III",q:"_____ on intention is a major reason for problems in relationships",o:["Trust","Belief","Doubt","None of these"],a:2},
+{u:"Unit III",q:"The continuity of plant species is maintained in the nature by _____ method",o:["Right value","Seed conformance","Constitution conformance","Breed conformance"],a:1},
+{u:"Unit III",q:"The basic activities of plant (Bio or Pranic) order are",o:["Selection/tasting","Knowing/Assuming","Recognition/Fulfilment","Composition/Decomposition"],a:2},
+{u:"Unit III",q:"Existence means",o:["Whatever that exist","To be in harmony with whatever that exist","Unit submerged in space","All of these"],a:3},
+{u:"Unit III",q:"Compassion is the value at the level of",o:["Individual/self","Family/Human-human relationship","Society/Universal human order","Nature/Interaction with rest of the nature"],a:2},
+{u:"Unit III",q:"Kindness (Daya) is the value at the level of",o:["Individual/self","Family/Human-human relationship","Society/Universal human order","Nature/Interaction with rest of the nature"],a:2},
+{u:"Unit III",q:"If a person neither has the ability nor has the means to fulfill his/her needs, the participation is",o:["Compassion","Kindness","Benevolence","Generosity"],a:0},
+{u:"Unit III",q:"_____ is the sum of the state of harmony within, expressing itself and participating in harmony with the outside world",o:["Preconditioning","Definite human conduct","Indefinite conduct","Inhuman behaviour"],a:1},
+{u:"Unit III",q:"Methods to remove unethical practices",o:["Audit inspections","Carrying out sting operations","Promoting awareness","All of these"],a:3},
+{u:"Unit III",q:"Which of the following should not be the key question to be answered while planning a production system?",o:["What to produce?","How and how much to produce?","For whom to produce?","How to make/earn huge profit?"],a:3},
+{u:"Unit III",q:"A good policy initiative reflects",o:["Conducive to human welfare","Conducive to protection, enrichment and right utilization of resources","Both","None of these"],a:2},
+{u:"Unit III",q:"Perseverance means",o:["Commitment for living in harmony at all 4 levels with patience","Commitment in helping others to understand harmony and live in harmony","Commitment to invest one's self, body and physical facilities for understanding and living in harmony","All of these"],a:0},
+{u:"Unit III",q:"Bravity means",o:["Commitment for living in harmony at all 4 levels with patience","Commitment in helping others to understand harmony and live in harmony","Commitment to invest one's self, body and physical facilities for understanding and living in harmony","All of these"],a:1},
+{u:"Unit III",q:"Generosity means",o:["Commitment for living in harmony at all 4 levels with patience","Commitment in helping others to understand harmony and live in harmony","Commitment to invest one's self, body and physical facilities for understanding and living in harmony","All of these"],a:2},
+{u:"Unit III",q:"Self restraint is the expressed value of",o:["Guidance","Gratitude","Trust","Love"],a:1},
+{u:"Unit III",q:"There is _____ in the 4 orders of the nature",o:["Mutual fulfilment","Opposition","Tendency to balance","Struggle"],a:0},
+{u:"Unit III",q:"Awakening to the activity of _____ leads to clarity of co-existence and submergence",o:["Contemplation","Understanding","Realization","Comparing"],a:2},
+{u:"Unit III",q:"Awakening to the activity of _____ leads to clarity of Harmony in nature, Self organization",o:["Contemplation","Understanding","Realization","Comparing"],a:1},
+{u:"Unit III",q:"Awakening to the activity of _____ leads to clarity of Relationship, Natural characteristic or participation in larger order",o:["Contemplation","Understanding","Realization","Comparing"],a:0},
+{u:"Unit III",q:"Which among the following indicates the participation in larger order?",o:["Natural characteristic","Innateness","Co-existence","Form"],a:0},
+{u:"Unit III",q:"Which one of the following indicates self organization?",o:["Natural characteristic","Innateness","Co-existence","Form"],a:1},
+{u:"Unit III",q:"Which one of the following indicates submergence?",o:["Natural characteristic","Innateness","Co-existence","Form"],a:2},
+{u:"Unit III",q:"Which aspect/dimension of a unit indicates its size, colour, density, etc.?",o:["Natural characteristic","Innateness","Co-existence","Form"],a:3},
+{u:"Unit III",q:"Which aspect/dimension of a unit indicates the impact of one unit on the other unit?",o:["Property","Natural characteristic","Form","Co-existence"],a:0},
+{u:"Unit III",q:"What aspect/dimension of a Plant change with the time and space?",o:["Co-existence and innateness","Natural characteristic and innateness","Form and property","Property and co-existence"],a:2},
+{u:"Unit III",q:"What is the innateness of a Plant?",o:["Existence + Growth","Cruelty/Non-cruelty","Nurture/Worsen","Will to live in Self"],a:0},
+{u:"Unit III",q:"Which statement indicates the submergence of a Plant in this existence?",o:["Every cell of the Plant is energized in co-existence with space","Every cell of the Plant is self-organized in co-existence with space","Every cell of the Plant is recognizes and fulfills its relationship with other units","All of these"],a:3},
+{u:"Unit III",q:"Contemplation leads to a feeling of",o:["Bliss","Happiness","Satisfaction","Peace"],a:2},
+{u:"Unit III",q:"Understanding leads to a feeling of",o:["Bliss","Happiness","Satisfaction","Peace"],a:0},
+{u:"Unit III",q:"Unguided self leads to",o:["Obsession for sensation","Obsession for indulgence","Obsession for Profit","All of these"],a:3},
+{u:"Unit III",q:"Existential Law consists of",o:["Physical Law","Behavioural Law","Societal Law","All of these"],a:3},
+{u:"Unit III",q:"The base of unconditional relationship is",o:["Right feeling","Thought","Expectation","None of these"],a:0},
+{u:"Unit III",q:"Right sequence in which Human Tradition can be materialized",o:["Human Education, Human Conduct, Human Constitution, Human Order","Human Constitution, Human Order, Human Education, Human Conduct","Human Conduct, Human Order, Human Education, Human Constitution","Human Order, Human Education, Human Constitution, Human Conduct"],a:0},
+{u:"Unit III",q:"'Co-existence' is ever present, ever effective, ever _____",o:["Expensive","Expressive","Extended","Exhausted"],a:1},
+{u:"Unit III",q:"To attain the universal order, which of the following is most effective?",o:["Human Order","Material Order","Pranic Order","Animal Order"],a:0},
+{u:"Unit III",q:"Complete alignment of our view/vision with reality is",o:["Education","Qualification","Knowledge","Happiness"],a:2},
+{u:"Unit III",q:"Right Mindfulness means",o:["Mind is full of multiple thoughts","Continuous awareness","Remembering things in sequence","Possessing a great memory power"],a:1},
+{u:"Unit III",q:"Justice takes care of our",o:["Physical and mental well-being","Relationship in human interaction","Both","None of these"],a:1},
+{u:"Unit III",q:"Education and health take care of our",o:["Physical and mental well-being","Relationship in human interaction","Both","None of these"],a:0},
+];
+
+// ===================== APP STATE =====================
+let selectedUnit='all', selectedCount='all';
+let quizQuestions=[], currentIdx=0, answers=[], flagged=[], shuffledOpts=[];
+let timerInterval, startTime, elapsed=0;
+let reviewFilter='all';
+
+// ===================== HELPERS =====================
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function show(id){document.getElementById(id).classList.remove('hidden')}
+function hide(id){document.getElementById(id).classList.add('hidden')}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+
+// ===================== SETUP =====================
+function selectUnit(u){
+  selectedUnit=u;
+  document.querySelectorAll('.unit-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('unit-'+u).classList.add('active');
+}
+function selectCount(c){
+  selectedCount=c;
+  document.querySelectorAll('.count-chip').forEach(b=>b.classList.remove('active'));
+  document.getElementById('cnt-'+c).classList.add('active');
+}
+
+function startQuiz(){
+  let pool=ALL_QUESTIONS;
+  if(selectedUnit!=='all') pool=pool.filter(q=>q.u==='Unit '+selectedUnit);
+  pool=shuffle(pool);
+  if(selectedCount!=='all') pool=pool.slice(0,Math.min(+selectedCount,pool.length));
+  quizQuestions=pool;
+  answers=new Array(pool.length).fill(null);
+  flagged=new Array(pool.length).fill(false);
+  shuffledOpts=pool.map(q=>{
+    const orig=q.o.map((t,i)=>({t,i}));
+    return shuffle(orig);
+  });
+  currentIdx=0;
+  elapsed=0;
+  startTimer();
+  hide('screen-welcome');show('screen-quiz');
+  renderQuestion();
+}
+
+// ===================== TIMER =====================
+function startTimer(){
+  clearInterval(timerInterval);
+  startTime=Date.now()-elapsed*1000;
+  timerInterval=setInterval(()=>{
+    elapsed=Math.floor((Date.now()-startTime)/1000);
+    const el=document.getElementById('timer-display');
+    const box=document.getElementById('timer-box');
+    el.textContent=fmt(elapsed);
+    box.className='timer-box'+(elapsed>600?' danger':elapsed>300?' warn':'');
+  },1000);
+}
+
+// ===================== RENDER QUESTION =====================
+function renderQuestion(){
+  const q=quizQuestions[currentIdx];
+  const total=quizQuestions.length;
+  const answered=answers.filter(a=>a!==null).length;
+
+  document.getElementById('q-unit-tag').textContent=q.u;
+  document.getElementById('q-counter').textContent=`Question ${currentIdx+1} of ${total}`;
+  document.getElementById('q-num').textContent=`Q${currentIdx+1}`;
+  document.getElementById('q-text').textContent=q.q;
+
+  const pct=Math.round((currentIdx/total)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-txt').textContent=Math.round((answered/total)*100)+'% answered';
+  document.getElementById('progress-count').textContent=answered+'/'+total;
+
+  const flagBtn=document.getElementById('flag-btn');
+  flagBtn.className='flag-btn'+(flagged[currentIdx]?' flagged':'');
+
+  // Options
+  const grid=document.getElementById('options-grid');
+  grid.innerHTML='';
+  const opts=shuffledOpts[currentIdx];
+  const letters=['A','B','C','D'];
+  const userAns=answers[currentIdx];
+
+  opts.forEach((opt,i)=>{
+    const isCorrect=opt.i===q.a;
+    const isSelected=userAns===i;
+    let cls='option';
+    if(userAns!==null){
+      cls+=' disabled';
+      if(isCorrect) cls+=' correct';
+      else if(isSelected) cls+=' wrong';
+    } else if(isSelected) cls+=' selected';
+
+    const icon=userAns!==null?(isCorrect?'✅':isSelected?'❌':''):'';
+    grid.innerHTML+=`<div class="${cls}" onclick="selectOption(${i})">
+      <div class="opt-letter">${letters[i]}</div>
+      <div class="opt-text">${opt.t}</div>
+      <div class="opt-icon">${icon}</div>
+    </div>`;
+  });
+
+  // Explanation
+  const expBox=document.getElementById('explanation-box');
+  if(userAns!==null){
+    const correctText=opts.find(o=>o.i===q.a).t;
+    expBox.innerHTML=`<strong>✅ Correct Answer:</strong> ${correctText}`;
+    expBox.classList.remove('hidden');
+  } else {
+    expBox.classList.add('hidden');
+  }
+
+  // Buttons
+  document.getElementById('prev-btn').disabled=currentIdx===0;
+  const nextBtn=document.getElementById('next-btn');
+  if(currentIdx===total-1){
+    nextBtn.textContent='🏁 Finish';
+  } else {
+    nextBtn.textContent='Next →';
+  }
+}
+
+function selectOption(i){
+  if(answers[currentIdx]!==null) return;
+  answers[currentIdx]=i;
+  renderQuestion();
+}
+
+function toggleFlag(){
+  flagged[currentIdx]=!flagged[currentIdx];
+  document.getElementById('flag-btn').className='flag-btn'+(flagged[currentIdx]?' flagged':'');
+}
+
+function prevQuestion(){
+  if(currentIdx>0){currentIdx--;renderQuestion();}
+}
+function nextQuestion(){
+  if(currentIdx<quizQuestions.length-1){currentIdx++;renderQuestion();}
+  else finishQuiz();
+}
+function skipQuestion(){
+  if(currentIdx<quizQuestions.length-1){currentIdx++;renderQuestion();}
+  else finishQuiz();
+}
+
+// ===================== FINISH =====================
+function finishQuiz(){
+  clearInterval(timerInterval);
+  let correct=0,wrong=0,skip=0;
+  const unitStats={};
+  quizQuestions.forEach((q,i)=>{
+    if(!unitStats[q.u]) unitStats[q.u]={c:0,t:0};
+    unitStats[q.u].t++;
+    const userAns=answers[i];
+    const shuffled=shuffledOpts[i];
+    if(userAns===null){skip++;}
+    else{
+      const picked=shuffled[userAns];
+      if(picked.i===q.a){correct++;unitStats[q.u].c++;}
+      else wrong++;
+    }
+  });
+  const total=quizQuestions.length;
+  const pct=Math.round((correct/total)*100);
+
+  // Score display
+  document.getElementById('result-badge').style.setProperty('--pct',pct);
+  document.getElementById('result-pct').textContent=pct+'%';
+  let grade,title,msg;
+  if(pct>=90){grade='S+';title='Outstanding! 🏆';msg='You absolutely nailed it! Incredible performance!'}
+  else if(pct>=80){grade='A';title='Excellent! ⭐';msg='Great work! You have a solid understanding.'}
+  else if(pct>=70){grade='B';title='Good Job! 👍';msg='Well done! Keep practicing to reach the top.'}
+  else if(pct>=60){grade='C';title='Not Bad! 📖';msg='Decent score. A bit more practice will help.'}
+  else if(pct>=50){grade='D';title='Keep Trying! 💪';msg='You are on the right track. Review and retry!'}
+  else{grade='F';title='Need Practice! 📚';msg='Don\'t give up! Review the material and try again.'}
+  document.getElementById('result-grade').textContent=grade;
+  document.getElementById('result-title').textContent=title;
+  document.getElementById('result-msg').textContent=msg;
+  document.getElementById('rs-correct').textContent=correct;
+  document.getElementById('rs-wrong').textContent=wrong;
+  document.getElementById('rs-skip').textContent=skip;
+  document.getElementById('rs-time').textContent=fmt(elapsed);
+
+  // Unit breakdown
+  const colors={'Unit I':'#6c63ff','Unit II':'#ff6584','Unit III':'#43e97b'};
+  let breakHtml='<div class="breakdown-title">📊 Unit-wise Performance</div>';
+  Object.entries(unitStats).forEach(([u,s])=>{
+    const p=Math.round((s.c/s.t)*100);
+    breakHtml+=`<div class="unit-row">
+      <div class="unit-row-label">${u}</div>
+      <div class="unit-progress"><div class="unit-fill" style="width:${p}%;background:${colors[u]||'#6c63ff'}"></div></div>
+      <div class="unit-pct-txt" style="color:${colors[u]||'#6c63ff'}">${p}%</div>
+    </div>`;
+  });
+  document.getElementById('unit-breakdown').innerHTML=breakHtml;
+
+  hide('screen-quiz');show('screen-result');
+  if(pct>=70) launchConfetti();
+}
+
+// ===================== CONFETTI =====================
+function launchConfetti(){
+  const colors=['#6c63ff','#ff6584','#43e97b','#ffd166','#06d6a0','#118ab2'];
+  for(let i=0;i<80;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='confetti-piece';
+      el.style.left=Math.random()*100+'vw';
+      el.style.background=colors[Math.floor(Math.random()*colors.length)];
+      el.style.animationDuration=(2+Math.random()*2)+'s';
+      el.style.animationDelay=(Math.random()*.5)+'s';
+      el.style.transform=`rotate(${Math.random()*360}deg)`;
+      el.style.width=(6+Math.random()*8)+'px';
+      el.style.height=(6+Math.random()*8)+'px';
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),4000);
+    },i*30);
+  }
+}
+
+// ===================== REVIEW =====================
+function showReview(){
+  hide('screen-result');show('screen-review');
+  reviewFilter='all';
+  document.querySelectorAll('.rf-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('rf-all').classList.add('active');
+  renderReview();
+}
+
+function filterReview(f){
+  reviewFilter=f;
+  document.querySelectorAll('.rf-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('rf-'+f).classList.add('active');
+  renderReview();
+}
+
+function renderReview(){
+  const list=document.getElementById('review-list');
+  const letters=['A','B','C','D'];
+  let html='';
+  quizQuestions.forEach((q,i)=>{
+    const userAns=answers[i];
+    const shuffled=shuffledOpts[i];
+    let status='skip';
+    if(userAns!==null){
+      status=shuffled[userAns].i===q.a?'correct':'wrong';
+    }
+    if(reviewFilter!=='all'&&reviewFilter!==status) return;
+    const statusLabel=status==='correct'?'✅ Correct':status==='wrong'?'❌ Wrong':'⏭ Skipped';
+    let optsHtml='';
+    shuffled.forEach((opt,j)=>{
+      const isCorrect=opt.i===q.a;
+      const isPicked=userAns===j;
+      let cls='ri-opt';
+      if(isCorrect) cls+=' ri-correct-opt';
+      else if(isPicked) cls+=' ri-wrong-opt';
+      optsHtml+=`<div class="${cls}">${letters[j]}. ${opt.t} ${isCorrect?'✅':isPicked?'❌':''}</div>`;
+    });
+    html+=`<div class="review-item ri-${status}">
+      <div class="ri-meta"><span class="ri-status ${status}">${statusLabel}</span><span class="ri-unit">${q.u} • Q${i+1}</span></div>
+      <div class="ri-q">${q.q}</div>
+      <div class="ri-opts">${optsHtml}</div>
+    </div>`;
+  });
+  if(!html) html='<div style="text-align:center;padding:40px;color:var(--text2)">No questions in this category.</div>';
+  list.innerHTML=html;
+}
+
+function retakeQuiz(){
+  hide('screen-result');hide('screen-review');
+  startQuiz();
+}
+function goHome(){
+  clearInterval(timerInterval);
+  hide('screen-quiz');hide('screen-result');hide('screen-review');
+  show('screen-welcome');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('screen-quiz').classList.contains('hidden')) return;
+  if(e.key==='ArrowRight'||e.key==='Enter') nextQuestion();
+  if(e.key==='ArrowLeft') prevQuestion();
+  if(['1','2','3','4'].includes(e.key)) selectOption(+e.key-1);
+  if(e.key==='f'||e.key==='F') toggleFlag();
+});
+</script>
+</body>
+</html>
