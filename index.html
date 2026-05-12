@@ -423,21 +423,26 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <!-- ═══════════ WELCOME ═══════════ -->
 <div class="screen" id="screen-welcome">
   <div class="w-left">
-    <img class="w-left-img" src="hero.png" alt="">
     <div class="w-left-overlay"></div>
     <div class="w-left-glow"></div>
-    <div class="w-left-badge">
-      "The light of right understanding illuminates every human being — within and without."
+    <div class="w-math-art">
+      <div class="w-math-line">A = P D P⁻¹</div>
+      <div class="w-math-line sm">∫₋π^π f(x) cos(nx) dx</div>
+      <div class="w-math-line">rank(A) + nullity(A) = n</div>
+      <div class="w-math-line sm">L{eᵃᵗ} = 1/(s − a)</div>
+      <div class="w-math-line">Ax = λx</div>
+      <div class="w-math-line sm">span(S) = V</div>
     </div>
+    <div class="w-left-badge">MAT106 — Linear Algebra &amp; Transform Techniques</div>
   </div>
   <div class="w-right">
-    <div class="w-label">Universal Human Values</div>
-    <h1 class="w-title">UHV MCQ Quiz</h1>
-    <p class="w-sub">All 237 questions from every unit. Questions and options shuffle on every attempt — no two tests are the same.</p>
+    <div class="w-label">MAT106 · Linear Algebra</div>
+    <h1 class="w-title">MCQ Practice Test</h1>
+    <p class="w-sub">101 questions across 5 units. Questions and options shuffle every attempt — no two tests are the same.</p>
 
     <div class="w-stats">
-      <div class="w-stat"><div class="w-stat-val">237</div><div class="w-stat-key">Questions</div></div>
-      <div class="w-stat"><div class="w-stat-val">3</div><div class="w-stat-key">Units</div></div>
+      <div class="w-stat"><div class="w-stat-val">101</div><div class="w-stat-key">Questions</div></div>
+      <div class="w-stat"><div class="w-stat-val">5</div><div class="w-stat-key">Units</div></div>
       <div class="w-stat"><div class="w-stat-val">∞</div><div class="w-stat-key">Attempts</div></div>
     </div>
 
@@ -445,19 +450,27 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="w-unit-grid">
       <div class="u-chip active" onclick="selectUnit('all')" id="unit-all">
         <div class="u-chip-name">All Units</div>
-        <div class="u-chip-cnt">237 questions</div>
+        <div class="u-chip-cnt">101 Qs</div>
       </div>
       <div class="u-chip" onclick="selectUnit('I')" id="unit-I">
         <div class="u-chip-name">Unit I</div>
-        <div class="u-chip-cnt">91 questions</div>
+        <div class="u-chip-cnt">22 Qs</div>
       </div>
       <div class="u-chip" onclick="selectUnit('II')" id="unit-II">
         <div class="u-chip-name">Unit II</div>
-        <div class="u-chip-cnt">55 questions</div>
+        <div class="u-chip-cnt">20 Qs</div>
       </div>
       <div class="u-chip" onclick="selectUnit('III')" id="unit-III">
         <div class="u-chip-name">Unit III</div>
-        <div class="u-chip-cnt">91 questions</div>
+        <div class="u-chip-cnt">20 Qs</div>
+      </div>
+      <div class="u-chip" onclick="selectUnit('IV')" id="unit-IV">
+        <div class="u-chip-name">Unit IV</div>
+        <div class="u-chip-cnt">20 Qs</div>
+      </div>
+      <div class="u-chip" onclick="selectUnit('V')" id="unit-V">
+        <div class="u-chip-name">Unit V</div>
+        <div class="u-chip-cnt">19 Qs</div>
       </div>
     </div>
 
